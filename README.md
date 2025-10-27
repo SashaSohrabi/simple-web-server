@@ -1,86 +1,67 @@
-# WBS Node.js TypeScript Backend Scaffold
+# Simple Web Server
 
-A modern, production-ready scaffold for Node.js backend projects using TypeScript with ES modules support.
+A TypeScript project that exposes product CRUD operations through both a Commander-powered CLI and an Express 5 API. Business logic lives in reusable services backed by MongoDB via Mongoose.
 
 ## 🚀 Quick Start
 
-### Setup
-
 ```bash
-# Clone the template repository
-git clone https://github.com/WebDev-WBSCodingSchool/wbs-node-ts-template.git your-project-name
-
-# Navigate to your project
-cd your-project-name
-
-# Remove the existing git history and reinitialize
-rm -rf .git
-git init
+# Clone the repository
+git clone https://github.com/SashaSohrabi/simple-web-server.git
+cd simple-web-server
 
 # Install dependencies
 npm install
-
-# Start development
-npm run dev
 ```
+
+Create the environment files required by the CLI and HTTP server. At minimum provide your Mongo connection string:
+
+```bash
+echo "MONGO_URI=mongodb://localhost:27017" > .env.production.local
+echo "PORT=3000" >> .env.production.local     # optional override
+```
+
+### Run the tools
+
+- CLI (watch mode): `npm run dev`
+- CLI (production build): `npm run start -- <command> [args]`
+- HTTP server: `npm run start:server`
 
 ## 📁 Project Structure
 
 ```bash
 .
-├── package-lock.json   # Dependency lock file (auto-generated)
-├── package.json        # Project configuration and dependencies
-├── README.md          # This file
+├── package.json        # Scripts, deps, path aliases
 ├── src
-│   └── app.ts          # Application entry point
+│   ├── app.ts          # CLI entry (Commander commands)
+│   ├── server.ts       # Express server using shared services
+│   ├── services/       # Reusable product CRUD functions
+│   ├── models/         # Mongoose models
+│   └── db/             # MongoDB connection bootstrap
 └── tsconfig.json       # TypeScript configuration
 ```
 
-> **Note**: The `dist/` directory will be created automatically when you run `npm run build` to contain the compiled JavaScript output.
+> `dist/` is generated automatically by `npm run build`.
 
 ## 🛠 Available Scripts
 
-| Command            | Description                                                |
-| ------------------ | ---------------------------------------------------------- |
-| `npm run dev`      | Start development server with file watching and hot reload |
-| `npm run build`    | Compile TypeScript to JavaScript                           |
-| `npm run start`    | Build and run the production version                       |
-| `npm run prebuild` | Clean the dist directory (runs automatically before build) |
-| `npm run prestart` | Build the project (runs automatically before start)        |
+| Command              | Description                                                                    |
+| -------------------- | ------------------------------------------------------------------------------ |
+| `npm run dev`        | Run the CLI in watch mode with development env vars                            |
+| `npm run build`      | Compile TypeScript output into `dist/`                                         |
+| `npm run start`      | Build and invoke the compiled CLI (`dist/app.js`)                              |
+| `npm run start:server` | Build and launch the Express API (`dist/server.js`) with production env vars |
 
-## 🔧 Features
+> `prebuild`, `prestart`, and `prestart:server` run automatically to ensure fresh builds.
 
-### Modern TypeScript Configuration
+## 🔧 Key Features
 
-- **ES2022** target with modern JavaScript features
-- **Strict mode** enabled for better type safety
-- **ES Modules** support (native Node.js ESM)
-- **Path aliases** with `#` prefix to avoid conflicts
-- **Import extensions** support for better IDE experience
+- Strict TypeScript setup targeting ES2022 with native ES modules
+- Shared service layer consumed by both CLI commands and HTTP routes
+- Express 5 REST API with validation and MongoDB persistence via Mongoose
+- Path aliases (`#services`, `#models`, etc.) for clean import statements
 
-### Development Experience
+## 📦 Runtime Dependencies
 
-- **File watching** with `--watch` flag for instant reloads
-- **TypeScript** compilation with proper module resolution
-- **Clean builds** with automatic dist cleanup
-- **Isolated modules** for better compilation performance
-
-### Path Aliases
-
-The project supports internal path aliases using the `#` prefix:
-
-```typescript
-// Instead of relative imports like this:
-import { helper } from '../../../utils';
-
-// You can use clean aliases like this:
-import { helper } from '#utils';
-```
-
-You need to add additional modules subpaths to the `imports` field in `package.json`
-
-## 📦 Dependencies
-
-### Runtime Dependencies
-
-- None (pure Node.js setup ready for your additions)
+- `commander` — CLI argument parsing
+- `express` — HTTP API
+- `mongoose` — MongoDB ODM
